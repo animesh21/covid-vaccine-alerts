@@ -1,0 +1,15 @@
+{
+  "states": [
+    {
+      "id": 34,
+      "name": "Uttar Pradesh"
+    }
+  ],
+  "districts": [
+    {
+      "id": 670,
+      "name": "Lucknow",
+      "state_id": 34
+    }
+  ]
+}
