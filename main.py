@@ -14,15 +14,16 @@ def send_alerts():
 
 
 def send_district_alerts(district_id: int):
-    capacity = get_capacity(district_id)
-    print('Under 45 capacity: {}'.format(capacity))
+    capacity_dict = get_capacity(district_id)
+    print(f'Under 45 capacity: {capacity_dict}')
 
-    # message to be send via WhatsApp
-    message = (f'Total {capacity} COVID-19 vaccine doses are available for the age group 18 to 44 currently. '
-               f'Please book your slot at {CoWinClient.home_url}')
+    # message to be sent via WhatsApp
+    message = (f'COVID-19 vaccine slots are available for the age group 18 to 44.\n'
+               f'Availability:\nDose 1: {capacity_dict["dose_1"]}\nDose 2: {capacity_dict["dose_2"]}'
+               f'\nPlease book your slot at {CoWinClient.registration_url}')
 
     # if capacity more than 5 then find the active users and notify them via WhatsApp
-    if capacity >= 5:
+    if capacity_dict['total'] >= 5:
         users = get_active_users(district_id=district_id)
         recipient_phone_numbers = []
         now = datetime.now()
