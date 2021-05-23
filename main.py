@@ -33,7 +33,7 @@ def send_district_alerts(district_id: int):
             if last_notified:
                 time_diff = now - last_notified
                 num_seconds_in_3_hours = 3 * 60 * 60
-                if time_diff.seconds > num_seconds_in_3_hours:
+                if time_diff.total_seconds() > num_seconds_in_3_hours:
                     recipient_phone_numbers.append((user['id'], user['phone']))
             else:
                 recipient_phone_numbers.append((user['id'], user['phone']))
