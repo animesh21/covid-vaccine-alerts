@@ -49,11 +49,12 @@ class CoWinClient(object):
         return total_capacity
 
     def get_capacity_for_minimum_age(self, min_age):
+        hospital_name = 'VJBMC'
         headers = self.get_request_headers()
         res = requests.get(self.url, headers=headers)
         res_json = res.json()
         all_centers = res_json.get('centers') or []
-        print(f'Total centers: {len(all_centers)}')
+        # print(f'Total centers: {len(all_centers)}')
         total_capacity = {
             'total': 0,
             'dose_1': 0,
@@ -61,13 +62,15 @@ class CoWinClient(object):
         }
         total_number_of_centers = 0
         for center in all_centers:
+            if not center['name'].startswith(hospital_name):
+                continue
             center_capacity = {
                 'total': 0,
                 'dose_1': 0,
                 'dose_2': 0,
             }
             for session in center['sessions']:
-                if session['min_age_limit'] <= min_age:
+                if min_age <= session['min_age_limit']:
                     center_capacity['total'] += session['available_capacity']
                     center_capacity['dose_1'] += session['available_capacity_dose1']
                     center_capacity['dose_2'] += session['available_capacity_dose2']
@@ -77,7 +80,7 @@ class CoWinClient(object):
                 total_capacity['total'] += center_capacity['total']
                 total_capacity['dose_1'] += center_capacity['dose_1']
                 total_capacity['dose_2'] += center_capacity['dose_2']
-        print(f'# of centers with min age {min_age}: {total_number_of_centers}')
+        # print(f'# of centers with min age {min_age}: {total_number_of_centers}')
         return total_capacity
 
     @staticmethod
@@ -103,6 +106,6 @@ class CoWinClient(object):
 if __name__ == '__main__':
     lucknow_district_id = 670
     co_win_client = CoWinClient(lucknow_district_id)
-    capacity = co_win_client.get_under_45_capacity()
-    # capacity = co_win_client.get_capacity_for_minimum_age(20)
+    # capacity = co_win_client.get_under_45_capacity()
+    capacity = co_win_client.get_capacity_for_minimum_age(45)
     print(f'Total under 45 capacity: {capacity}')
